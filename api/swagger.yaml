@@ -1,0 +1,126 @@
+---
+swagger: "2.0"
+info:
+  description: "This is a sample server Nodejs application Express to connect with\
+    \ the Twitter stream api."
+  version: "1.0.0"
+  title: "Swagger dexTweet"
+  termsOfService: "http://swagger.io/terms/"
+  contact:
+    email: "masoodhussain02@gmail.com"
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+host: "localhost"
+basePath: "/v2"
+tags:
+- name: "user"
+  description: "Operations about user"
+  externalDocs:
+    description: "Find out more"
+    url: "http://www.dexhigh.com"
+schemes:
+- "https"
+- "http"
+paths:
+  /user/login:
+    get:
+      tags:
+      - "user"
+      summary: "Logs user into the system"
+      description: ""
+      operationId: "loginUser"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "query"
+        description: "The user name for login"
+        required: true
+        type: "string"
+      - name: "password"
+        in: "query"
+        description: "The password for login in clear text"
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          headers:
+            X-Rate-Limit:
+              type: "integer"
+              format: "int32"
+              description: "calls per hour allowed by the user"
+            X-Expires-After:
+              type: "string"
+              format: "date-time"
+              description: "date in UTC when token expires"
+          schema:
+            type: "string"
+        400:
+          description: "Invalid username/password supplied"
+      x-swagger-router-controller: "User"
+  /user/logout:
+    get:
+      tags:
+      - "user"
+      summary: "Logs out current logged in user session"
+      description: ""
+      operationId: "logoutUser"
+      produces:
+      - "application/json"
+      parameters: []
+      responses:
+        default:
+          description: "successful operation"
+      x-swagger-router-controller: "User"
+  /user/search/tweet/{username}:
+    get:
+      tags:
+      - "user"
+      summary: "Get user tweets by user name"
+      description: ""
+      operationId: "getUserTweetsByName"
+      produces:
+      - "application/json"
+      parameters:
+      - name: "username"
+        in: "path"
+        description: "The name that needs to be fetched. Use user1 for testing. "
+        required: true
+        type: "string"
+      responses:
+        200:
+          description: "successful operation"
+          schema:
+            $ref: "#/definitions/User"
+        400:
+          description: "Invalid username supplied"
+        404:
+          description: "User not found"
+      x-swagger-router-controller: "User"
+definitions:
+  User:
+    type: "object"
+    properties:
+      id:
+        type: "integer"
+        format: "int64"
+      username:
+        type: "string"
+      description:
+        type: "string"
+      created_at:
+        type: "string"
+      text:
+        type: "string"
+      re_tweet_count:
+        type: "integer"
+        format: "int64"
+    example:
+      re_tweet_count: 6
+      description: "description"
+      created_at: "created_at"
+      id: 0
+      text: "text"
+      username: "username"
